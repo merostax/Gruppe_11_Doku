@@ -3,3 +3,5 @@ command
  cabal clean            
  cabal build
 cabal run SudokuGame
+
+Abdel
