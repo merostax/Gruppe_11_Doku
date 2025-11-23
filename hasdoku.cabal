@@ -7,7 +7,7 @@ author:             Merostax Team
 maintainer:         merostax@example.com
 category:           Game
 build-type:         Simple
-extra-doc-files:    README.md, CHANGELOG.md
+extra-doc-files:    README.md
 
 executable SudokuGame
   main-is:           Main.hs
