@@ -8,8 +8,8 @@ type Sudoku = [[Int]]
 -- Ausgabe eines Sudoku-Feldes in der Konsole, mit Zeilen-/Spalten-Indices
 printSudoku :: Sudoku -> IO ()
 printSudoku sudoku = do
-    putStrLn "    1 2 3   4 5 6   7 8 9"
-    putStrLn "  +-------+-------+-------+"
+    putStrLn "     1 2 3   4 5 6   7 8 9"
+    putStrLn "   +-------+-------+-------+"
     mapM_ putStrLn (formatRows sudoku 1)
   where
     formatRows :: Sudoku -> Int -> [String]
@@ -57,7 +57,6 @@ updateSudoku sudoku errors hintsUsed = do
     putStrLn "'Zeile Spalte Zahl' um eine Zahl zu setzen (z.B. 1 3 9)"
     putStrLn "'hint Zeile Spalte' fuer einen Hinweis"
     putStrLn "'-1' um das Sudoku automatisch zu loesen"
-    putStrLn $ "\nBenutzte Hinweise: " ++ show hintsUsed ++ "/5"
     input <- getLine
     let parts = words input
     case parts of
