@@ -5,18 +5,38 @@ import Solver (solve)
 
 type Sudoku = [[Int]]
 
--- Ausgabe eines Sudoku-Feldes in der Konsole
+-- Ausgabe eines Sudoku-Feldes in der Konsole, mit Zeilen-/Spalten-Indices
 printSudoku :: Sudoku -> IO ()
 printSudoku sudoku = do
-    putStrLn $ unlines $ formatSudoku sudoku
-
-formatSudoku :: Sudoku -> [String]
-formatSudoku sudoku = concatMap formatBlock [0, 3, 6]
+    putStrLn "    1 2 3   4 5 6   7 8 9"
+    putStrLn "  +-------+-------+-------+"
+    mapM_ putStrLn (formatRows sudoku 1)
   where
-    formatBlock r =
-      [ concatMap (\c -> unwords (map (\n -> if n == 0 then "." else show n) (take 3 (drop c (sudoku !! (r + i))))) ++ " | ") [0, 3, 6] | i <- [0..2]]
-      ++ [divider]
-    divider = replicate 21 '-'
+    formatRows :: Sudoku -> Int -> [String]
+    formatRows [] _ = []
+    formatRows (row:rs) r =
+      let rowStr = formatRow r row
+          sep    = if r `mod` 3 == 0 && r /= 9
+                     then ["  +-------+-------+-------+"]
+                     else []
+      in rowStr : sep ++ formatRows rs (r + 1)
+
+    formatRow :: Int -> [Int] -> String
+    formatRow r row =
+      let cells = [ cellString c n | (c, n) <- zip [1..9] row ]
+      in padRow r ++ "| " ++ concat cells ++ "|"
+
+    cellString :: Int -> Int -> String
+    cellString c n =
+      let v = if n == 0 then ". " else show n ++ " "
+      in if c `mod` 3 == 0 && c /= 9
+            then v ++ "| "
+            else v
+
+    padRow :: Int -> String
+    padRow r =
+      if r < 10 then " " ++ show r ++ " " else show r ++ " "
+
 
 -- Benutzerwahl fuer Anzahl der leeren Felder
 getPuzzleDifficulty :: IO Int
@@ -104,8 +124,13 @@ updateSudoku sudoku errors hintsUsed = do
 -- Hauptspiel-Funktion
 playSudoku :: Sudoku -> Int -> Int -> IO ()
 playSudoku sudoku errors hintsUsed = do
-    putStrLn "\nAktuelles Sudoku:\n---------------------"
+    putStrLn "\n========================================"
+    putStrLn "              S U D O K U"
+    putStrLn "========================================"
+    putStrLn $ "Fehler: " ++ show errors ++ " | Benutzte Hinweise: " ++ show hintsUsed ++ "/5"
+    putStrLn "========================================"
     printSudoku sudoku
+
     if isSolved sudoku
         then putStrLn $ "Herzlichen Glueckwunsch! Das Sudoku wurde geloest mit " ++ show errors ++ " Fehler(n)."
         else do
