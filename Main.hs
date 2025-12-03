@@ -2,10 +2,9 @@ module Main where
 
 import Generator
 import Solver (solve)
+import Generator (Sudoku)
 
-type Sudoku = [[Int]]
 
--- Ausgabe eines Sudoku-Feldes in der Konsole, mit Zeilen-/Spalten-Indices
 printSudoku :: Sudoku -> IO ()
 printSudoku sudoku = do
     putStrLn "     1 2 3   4 5 6   7 8 9"
@@ -64,7 +63,6 @@ updateSudoku sudoku errors hintsUsed = do
           let (solvedSudoku, success) = solve sudoku
           if success then do
               putStrLn "\nDas Sudoku wurde geloest!"
-              printSudoku solvedSudoku
               return (solvedSudoku, errors, hintsUsed)
           else do
               putStrLn "Keine gueltige Loesung gefunden."
